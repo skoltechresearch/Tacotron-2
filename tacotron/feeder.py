@@ -125,10 +125,17 @@ class Feeder:
 		text = meta[5]
 
 		input_data = np.asarray(text_to_sequence(text, self._cleaner_names), dtype=np.int32)
-		mel_target = np.load(os.path.join(self._mel_dir, meta[1]))
+		
+		num = int((meta[1].split('-')[2]).split('.')[0])
+		mel_target = np.load(os.path.join(self._mel_dir, mel_folder_num, meta[1]))
+		folder_num = str(num // 1000)
+		sub_folder_num = str(((num) % 1000) // 100)
+
+ 		mel_target = np.load(os.path.join(self._mel_dir, folder_num, sub_folder_num, meta[1]))
 		#Create parallel sequences containing zeros to represent a non finished sequence
 		token_target = np.asarray([0.] * (len(mel_target) - 1))
-		linear_target = np.load(os.path.join(self._linear_dir, meta[2]))
+		linear_target = np.load(os.path.join(self._linear_dir, folder_num, sub_folder_num, meta[2]))
+		
 		return (input_data, mel_target, token_target, linear_target, len(mel_target))
 
 	def make_test_batches(self):
@@ -189,10 +196,16 @@ class Feeder:
 		text = meta[5]
 
 		input_data = np.asarray(text_to_sequence(text, self._cleaner_names), dtype=np.int32)
-		mel_target = np.load(os.path.join(self._mel_dir, meta[1]))
+		
+		num = int((meta[1].split('-')[2]).split('.')[0])
+		mel_target = np.load(os.path.join(self._mel_dir, mel_folder_num, meta[1]))
+		folder_num = str(num // 1000)
+		sub_folder_num = str(((num) % 1000) // 100)
+
+ 		mel_target = np.load(os.path.join(self._mel_dir, folder_num, sub_folder_num, meta[1]))
 		#Create parallel sequences containing zeros to represent a non finished sequence
 		token_target = np.asarray([0.] * (len(mel_target) - 1))
-		linear_target = np.load(os.path.join(self._linear_dir, meta[2]))
+		linear_target = np.load(os.path.join(self._linear_dir, folder_num, sub_folder_num, meta[2]))
 		return (input_data, mel_target, token_target, linear_target, len(mel_target))
 
 	def _prepare_batch(self, batches, outputs_per_step):
