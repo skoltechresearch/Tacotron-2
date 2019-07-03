@@ -127,7 +127,6 @@ class Feeder:
 		input_data = np.asarray(text_to_sequence(text, self._cleaner_names), dtype=np.int32)
 
 		num = int((meta[1].split('-')[2]).split('.')[0])
-		mel_target = np.load(os.path.join(self._mel_dir, mel_folder_num, meta[1]))
 		folder_num = str(num // 1000)
 		sub_folder_num = str((num % 1000) // 100)
 
@@ -198,7 +197,6 @@ class Feeder:
 		input_data = np.asarray(text_to_sequence(text, self._cleaner_names), dtype=np.int32)
 
 		num = int((meta[1].split('-')[2]).split('.')[0])
-		mel_target = np.load(os.path.join(self._mel_dir, mel_folder_num, meta[1]))
 		folder_num = str(num // 1000)
 		sub_folder_num = str((num % 1000) // 100)
 
