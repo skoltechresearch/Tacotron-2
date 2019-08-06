@@ -1,7 +1,7 @@
 import argparse
 import os
 from warnings import warn
-from time import sleep
+from time import sleep, time
 
 import tensorflow as tf
 
@@ -33,15 +33,26 @@ def get_sentences(args):
 def synthesize(args, hparams, taco_checkpoint, wave_checkpoint, sentences):
 	log('Running End-to-End TTS Evaluation. Model: {}'.format(args.name or args.model))
 	log('Synthesizing mel-spectrograms from text..')
+	
+	start = time()
 	wavenet_in_dir = tacotron_synthesize(args, hparams, taco_checkpoint, sentences)
+	M_sec = time() - start
+	
 	#Delete Tacotron model from graph
 	tf.reset_default_graph()
 	#Sleep 1/2 second to let previous graph close and avoid error messages while Wavenet is synthesizing
 	sleep(0.5)
 	log('Synthesizing audio from mel-spectrograms.. (This may take a while)')
+	
+	start = time()
 	wavenet_synthesize(args, hparams, wave_checkpoint)
+	N_sec = time() - start
+	
+	texts_len = sum([len(sent) for sent in sentences])
+	
 	log('Tacotron-2 TTS synthesis complete!')
-
+	
+	log ("{} text_to_mel seconds".format(M_sec), "{} mel_to_wav seconds".format(N_sec), "{} characters".format(texts_len))
 
 
 def main():
